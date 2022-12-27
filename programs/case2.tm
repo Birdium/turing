@@ -1,14 +1,14 @@
-; This example program checks if the input string is a binary palindrome.
-; Input: a string of 0's and 1's, e.g. '1001001'
+; This example program checks if the input string 's length is a square.
+; Input: a string of 1's, e.g. '1111111111111111111111111'
 
 ; the finite set of states
-#Q = {0,cp,cmp,mh,accept,accept2,accept3,accept4,halt_accept,reject,reject2,reject3,reject4,reject5,halt_reject}
+#Q = {0,move,add,move_back,accept,accept2,accept3,accept4,halt_accept,reject,reject2,reject3,reject4,reject5,halt_reject}
 
 ; the finite set of input symbols
-#S = {0,1}
+#S = {1}
 
 ; the complete set of tape symbols
-#G = {0,1,_,t,r,u,e,f,a,l,s}
+#G = {1,_,t,r,u,e,f,a,l,s}
 
 ; the start state
 #q0 = 0
@@ -25,29 +25,21 @@
 ; the transition functions
 
 ; State 0: start state
-0 0_ 0_ ** cp
-0 1_ 1_ ** cp
-0 __ __ ** accept ; empty input
+0 1_ 11 ** move
+0 __ __ ** reject
 
-; State cp: copy the string to the 2nd tape 
-cp 0_ 00 rr cp
-cp 1_ 11 rr cp
-cp __ __ ll mh
+; State move: ready to remove 2k+1's 1 
+move 11 _1 rr move
+move 1_ 11 *r add
+move __ __ ** accept
+move _1 __ ** reject
 
-; State mh: move 1st head to the left
-mh 00 00 l* mh
-mh 01 01 l* mh
-mh 10 10 l* mh
-mh 11 11 l* mh
-mh _0 _0 r* cmp
-mh _1 _1 r* cmp
+; State add: add 1 to tape1
+add 1_ 11 *l move_back
 
-; State cmp: compare two strings
-cmp 00 __ rl cmp
-cmp 11 __ rl cmp
-cmp 01 __ rl reject
-cmp 10 __ rl reject
-cmp __ __ ** accept
+; State move_back: move_back tape1
+move_back 11 11 *l move_back
+move_back 1_ 1_ *r move
 
 ; State accept*: write 'true' on 1st tape
 accept __ t_ r* accept2
