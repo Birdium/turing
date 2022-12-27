@@ -9,6 +9,7 @@ string TuringMachine::split_line = "--------------------------------------------
 string TuringMachine::run_line = "==================== RUN ====================";
 string TuringMachine::end_line = "==================== END ====================";
 string TuringMachine::err_line = "==================== ERR ====================";
+
 TuringMachine::TuringMachine(const string &filename, bool is_verbose){
 	_is_verbose = is_verbose;
 	_parser = new Parser(this, is_verbose);
@@ -23,6 +24,7 @@ TuringMachine::TuringMachine(const string &filename, bool is_verbose){
 		_parser->parse(line);
 	}
 	in_file.close();
+	check();
 	for (int i = 0; i < _tape_num; i++) {
 		_tapes.emplace_back(Tape(i, _blank_symbol));
 	}
@@ -31,6 +33,35 @@ TuringMachine::TuringMachine(const string &filename, bool is_verbose){
 
 TuringMachine::~TuringMachine() {
 	delete _parser;
+}
+
+void TuringMachine::check() {
+	if (_tape_num == 0) {
+		error("invalid tape num.");
+	}
+	if (_states.find(_cur_state) == _states.end()) {
+		error("invalid start state.");
+	}
+	for (auto ch : _input_symbols) {
+		if (_tape_symbols.find(ch) == _tape_symbols.end()) {
+			error("invalid input symbols");
+		}
+	}
+	if (_tape_symbols.find(_blank_symbol) == _tape_symbols.end() || 
+		_input_symbols.find(_blank_symbol) != _input_symbols.end()) {
+		error("invalid blank symbol");		
+	}
+	for (auto &f: _final_states) {
+		if (_states.find(f) == _states.end()) {
+			error("invalid final states");
+		}
+	}
+	// TODO: invalid transitions
+}
+
+void TuringMachine::error(const string & msg){
+	cerr << "error: " << msg << endl;
+	exit(2);
 }
 
 bool TuringMachine::match(Transition &trans) {

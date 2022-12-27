@@ -132,11 +132,16 @@ void Parser::parse_syms(const string & str, bool is_input) {
 	if (str[len-1] != '}') {
 		error("missing character \'}\'.");
 	}
-	for (int i = 4; i < len - 1; i++) {
+	for (int i = 4; i < len; i++) {
 		char ch = str[i];
 		if (ch == ',') {
 			if (i % 2 == 0) {
 				error("unexpected character \',\'");
+			}
+		}
+		else if (ch == '}') {
+			if (str[i-1] == ',') {
+				error("unexpected character \'}\'");
 			}
 		}
 		else if (!is_validSym(ch) || is_input && ch == '_') {

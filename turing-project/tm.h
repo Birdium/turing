@@ -59,6 +59,10 @@ class TuringMachine{
 
 	Parser *_parser;
 
+	void check();
+
+	void error(const std::string & msg);
+
 	bool match(Transition &trans);
 
 public:
