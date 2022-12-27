@@ -52,6 +52,7 @@ void Tape::execute(char ch, Direction direction) {
 void Tape::set(const string & str) {
 	_abs_index = _tape_index = 0;
 	_tape.clear();
+	if (str.size() == 0) _tape.push_back(_blank_sym);
 	for (auto ch : str) {
 		_tape.push_back(ch);
 	}

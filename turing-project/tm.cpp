@@ -109,8 +109,8 @@ void TuringMachine::input(const string & str) {
 		}
 	}
 	if (_is_verbose) {
-		cerr << "Input: " << str << endl;
-		cerr << run_line << endl;
+		cout << "Input: " << str << endl;
+		cout << run_line << endl;
 	}
 	_tapes[0].set(str);
 }
