@@ -38,7 +38,7 @@ bool is_validDirection(char ch) {
 }
 
 bool is_blank_ASCII(char ch) {
-	return ch == ' ' || ch == '\t' || ch == '\n';
+	return ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n';
 }
 
 bool is_empty_str(const string &str) {
